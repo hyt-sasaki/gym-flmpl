@@ -15,3 +15,6 @@ import gym-flmpl
 
 env = gym.make("FrozenLakeMpl-v0")
 ```
+
+# Demo
+![Demo](assets/anim.gif)
