@@ -1,5 +1,5 @@
 # gym-flmpl
-This environment is modified version of [FrozenLake environment](https://github.com/openai/gym/blob/master/gym/envs/toy_text/frozen_lake.py).  
+This environment is modified version of [FrozenLake environment](https://gym.openai.com/envs/FrozenLake-v0/).  
 The environment can be rendered visually by matplotlib.
 
 # Installation
@@ -12,8 +12,13 @@ pip install -e .
 ```python
 import gym
 import gym-flmpl
+from time import sleep
 
 env = gym.make("FrozenLakeMpl-v0")
+env.reset()
+env.verbose = True
+env.render(mode='mpl')
+sleep(1)
 ```
 
 # Demo
