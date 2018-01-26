@@ -8,6 +8,10 @@ class FrozenLakeEnv(frozen_lake.FrozenLakeEnv):
         'render.modes': ['human', 'ansi', 'rgb_array', 'mpl']
     }
 
+    def __init__(self, desc=None, map_name="4x4", is_slippery=True):
+        super(FrozenLakeEnv, self).__init__(desc, map_name, is_slippery)
+        self.shape = self.desc.shape
+
     def _render(self, mode='mpl', close=False):
         if mode in ['rgb_array', 'mpl']:
             if close:
