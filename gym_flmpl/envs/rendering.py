@@ -4,11 +4,18 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import numpy as np
 from gym.envs.toy_text import frozen_lake
+import copy
 
 
 class Viewer(object):
     FROZEN_COLOR = (0, 255, 255)    # cyan
     HOLE_COLOR = (128, 128, 128)    # gray
+    NORMAL_COLOR = (255, 255, 255)    # white
+    MAP_DICT = {
+        'F': FROZEN_COLOR,
+        'H': HOLE_COLOR,
+        'N': NORMAL_COLOR
+    }
     ACITON_DICT = {
         frozen_lake.LEFT: 'LEFT',
         frozen_lake.DOWN: 'DOWN',
@@ -16,7 +23,7 @@ class Viewer(object):
         frozen_lake.UP: 'UP'
     }
 
-    def __init__(self, maze):
+    def __init__(self, maze, convert):
         self.__maze_canvas = None
         self.__ax = None
         self.__sg_dict = {}
@@ -24,7 +31,14 @@ class Viewer(object):
         self.__ncols = None
         self.__fig = None
         self.__canvas = None
+        self.__convert = convert
+        self.__initialize_map_dict()
         self.__initialize_maze_canvas(maze)
+
+    def __initialize_map_dict(self):
+        self.__map_dict = copy.deepcopy(self.MAP_DICT)
+        for src, dst in self.__convert.iteritems():
+            self.__map_dict[src] = self.__map_dict[dst]
 
     def __initialize_maze_canvas(self, maze):
         start = np.argwhere(maze == 'S')[0]
@@ -35,8 +49,8 @@ class Viewer(object):
         self.__nrows, self.__ncols = maze.shape
         canvas_shape = [self.__nrows, self.__ncols, 3]
         self.__maze_canvas = np.zeros(canvas_shape, dtype=np.uint8)
-        self.__maze_canvas[:, :] = self.FROZEN_COLOR
-        self.__maze_canvas[maze == 'H'] = self.HOLE_COLOR
+        self.__maze_canvas[:, :] = self.__map_dict['F']
+        self.__maze_canvas[maze == 'H'] = self.__map_dict['H']
         self.__fig = Figure()
         self.__canvas = FigureCanvas(self.__fig)
 
